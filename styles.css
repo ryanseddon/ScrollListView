@@ -1,0 +1,14 @@
+.scrolllist {
+	display: flex;
+	flex-direction: column;
+	padding: 0;
+	margin: 0;
+}
+.scrolllist__cell {
+	height: 150px;
+	list-style: none;
+	display: block;
+	border: 1px solid #000;
+	-moz-box-sizing: border-box;
+	box-sizing: border-box;
+}
