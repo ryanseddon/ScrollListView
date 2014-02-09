@@ -6,80 +6,86 @@
         CELLHEIGHT = 150,
         listContainer = document.createElement('ul'),
         listContainerStyle = listContainer.style,
-        cells = Math.floor(winHeight/CELLHEIGHT) + 4,
+        cells,
+        cellsWithinViewportCount = Math.ceil(winHeight/CELLHEIGHT) * 2,
         cellsFrag = document.createDocumentFragment(),
         scrollTimer,
-        cellOutOfViewCount = 0,
+        rAF,
+        cellsOutOfViewportCount = 0,
         pageCount = 20,
         scrollPos = 1,
+        isScrollingDown,
+        orderProp = Modernizr.prefixed('order');
         scrollTop = lastScrollTop = body.scrollTop,
         cellsState = {};
 
-    function isElementInViewport (el) {
-      var elemPostion = el.getBoundingClientRect(),
-          html = document.documentElement;
+    rAF = Modernizr.prefixed('requestAnimationFrame', window) || function(callback) {
+        window.setTimeout(callback, 1000 / 60);
+    };
 
-      return (
-        !!elemPostion &&
-        elemPostion.bottom >= 0 &&
-        elemPostion.right >= 0 &&
-        elemPostion.top <= html.clientHeight &&
-        elemPostion.left <= html.clientWidth
-      );
+    function isElementInViewport (el) {
+        var elemPostion = el.getBoundingClientRect(),
+            html = document.documentElement;
+
+        return !!elemPostion && elemPostion.bottom >= -(CELLHEIGHT*2);
+    }
+
+    function isElementOutViewport (el) {
+        var elemPostion = el.getBoundingClientRect(),
+            html = document.documentElement;
+
+        return !!elemPostion && elemPostion.top >= (winHeight + CELLHEIGHT*2);
     }
 
     function checkCells() {
-        var cells = slice.call(listContainer.children);
-
+        cells = cells || slice.call(listContainer.children);
         scrollTop = body.scrollTop;
-
-        scrollPos = (scrollTop > lastScrollTop) ? 1 : 0;
+        isScrollingDown = (scrollTop > lastScrollTop) ? true : false;
 
         cells.forEach(function(cell, i) {
-            cellsState[i] = {
-                inViewport: true
-            };
-            if(!isElementInViewport(cell)) {
-                cellOutOfViewCount++;
-                cellsState.inViewport = false;
+            cellsState.style = cell.style;
+
+            if(!isElementInViewport(cell) && isScrollingDown) {
+                cellsOutOfViewportCount++;
+                cellsState.index = cells.length + cellsOutOfViewportCount;
+                console.log('setting cellsState.index: ', cellsState.index);
                 listContainerStyle.paddingTop = parseInt(listContainerStyle.paddingTop || 0, 10) + CELLHEIGHT + 'px';
-                if(scrollPos) {
-                    cell.style.order = cells.length + cellOutOfViewCount;
+                cellsState.style[orderProp] = cellsState.index;
+                cell.innerHTML = tmpl('tweet_tpl', tweets[cellsState.index]);
+            } else if(!isScrollingDown
+                    && isElementOutViewport(cell)
+                    && scrollTop > CELLHEIGHT
+                    && cellsState.style[orderProp] == cellsState.index) {
+                cellsOutOfViewportCount--;
+                cellsState.index--;
+                if(cellsState.index <= cells.length * 2) {
+                    cellsState.style[orderProp] = '';
                 } else {
-                    cell.style.order = '1';
+                    cellsState.style[orderProp] = cellsState.index-cells.length;
                 }
-                cell.innerText = 'Cell ' + (i+1) + ' has now become Cell ' + (cells.length + cellOutOfViewCount);
+                listContainerStyle.paddingTop = parseInt(listContainerStyle.paddingTop || 0, 10) - CELLHEIGHT + 'px';
+                cell.innerHTML = tmpl('tweet_tpl', tweets[cellsState.index-cells.length]);
             }
-            // else {
-            //     if(cell.offsetTop > winHeight && !scrollPos) {
-            //         console.log('not really in view');
-            //         cell.style.order = '';
-            //         listContainerStyle.paddingTop = parseInt(listContainerStyle.paddingTop || 0, 10) - CELLHEIGHT + 'px';
-            //     }
-            // }
         });
 
         lastScrollTop = body.scrollTop;
     }
 
-    for(var i = 0; i < cells; i++) {
+    for(var i = 0; i < cellsWithinViewportCount; i++) {
         var cell = document.createElement('li');
         cell.className = 'scrolllist__cell';
-        cell.appendChild(document.createElement('h1').appendChild(document.createTextNode('Cell ' + (i+1))));
+        cell.innerHTML = tmpl('tweet_tpl', tweets[i]);
         cellsFrag.appendChild(cell);
     }
 
     listContainer.className = 'scrolllist';
-    listContainerStyle.minHeight = pageCount * CELLHEIGHT + 'px';
+    listContainerStyle.minHeight = tweets.length * CELLHEIGHT + 'px';
     listContainer.appendChild(cellsFrag);
     body.appendChild(listContainer);
 
+    // Scroll fires after page has finished on iOS use touchmove
     window.addEventListener('scroll', function() {
-        clearTimeout(scrollTimer);
-
-        scrollTimer = setTimeout(function() {
-            checkCells();
-        }, 100);
+        rAF(checkCells);
     });
 
 }(this, this.document));

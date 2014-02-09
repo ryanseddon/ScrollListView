@@ -1,6 +1,22 @@
+@import "/bower_components/normalize-css/normalize.css";
+/* Utilities */
+@import "/bower_components/suit-utils-display/display.css";
+@import "/bower_components/suit-utils-layout/layout.css";
+@import "/bower_components/suit-utils-dimension/dimension.css";
+@import "/bower_components/suit-utils-state/state.css";
+@import "/bower_components/suit-utils-text/text.css";
+@import "/bower_components/suit-utils-link/link.css";
+
+* {
+	-moz-box-sizing: border-box;
+	box-sizing: border-box;
+}
+
 .scrolllist {
 	display: flex;
 	flex-direction: column;
+	display: -webkit-flex;
+	-webkit-flex-direction: column;
 	padding: 0;
 	margin: 0;
 }
@@ -9,6 +25,4 @@
 	list-style: none;
 	display: block;
 	border: 1px solid #000;
-	-moz-box-sizing: border-box;
-	box-sizing: border-box;
 }
