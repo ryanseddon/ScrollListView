@@ -12,6 +12,11 @@
 	box-sizing: border-box;
 }
 
+.gpuarise {
+	-webkit-transform: translateZ(0);
+	transform: translateZ(0);
+}
+
 .scrolllist {
 	display: flex;
 	flex-direction: column;
@@ -25,4 +30,5 @@
 	list-style: none;
 	display: block;
 	border: 1px solid #000;
+	padding: 10px;
 }

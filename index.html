@@ -8,46 +8,6 @@
 		<script type="text/javascript" src="modernizr.min.js"></script>
 		<script src="timeline.json"></script>
 		<script src="tpl.js"></script>
-	    <script type="text/html" id="tweets_tpl">
-	      <% for ( var k = 0; k < tweets.length; k++ ) { %>
-	        <li class="scrolllist__cell">
-			    <a class="u-objRight" href="#">
-			        <%=tweets[k].user.created_at%>
-			    </a>
-			    <a class="u-objLeft" href="[href]">
-			        <img src="<%=tweets[k].user.profile_image_url%>" alt="<%=tweets[k].user.screen_name%>'s avatar">
-			    </a>
-			    <div class="u-sizeFill">
-			        <a class="u-linkComplex" href="<%=tweets[k].url%>">
-			            <span class="u-linkComplex-target"><%=tweets[k].user.name%></span>
-			            <span><%=tweets[k].user.screen_name%></span>
-			        </a>
-
-			        <p>
-			            <a class="u-linkComplex" href="#">
-			                @<span class="u-linkComplex-target"><%=tweets[k].user.screen_name%></span>
-			            </a>
-			            <%=tweets[k].text%>
-			        </p>
-
-			        <div class="u-textMute">
-			            <a href="#">
-			                <span>Expand</span>
-			                <span class="u-isHidden">Collapse</span>
-			            </a>
-			            <a class="u-linkComplex" href="#">
-			                <i class="Icon Icon--reply"></i>
-			                <span class="u-linkComplex-target">Reply</span>
-			            </a>
-			            <a href="#">
-			                <i class="Icon Icon--favorite"></i>
-			                <span class="u-isHiddenVisually">Favorite</span>
-			            </a>
-			        </div>
-			    </div>
-			</li>
-	      <% } %>
-	    </script>
 	    <script type="text/text" id="tweet_tpl">
 	    	<a class="u-objLeft" href="[href]">
 		        <img src="<%=user.profile_image_url%>" alt="<%=user.screen_name%>'s avatar">
@@ -81,6 +41,6 @@
 		        </div>
 		    </div>
 		</script>
-		<script src="ScrollList.js"></script>
+		<script src="ScrollListView.js"></script>
 	</body>
 </html>
