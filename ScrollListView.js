@@ -1,113 +1,106 @@
-//function(window, document){
+(function(window, document){
 
-var winHeight = window.innerHeight,
-body = document.body,
-slice = [].slice,
-CELLHEIGHT = 150,
-listContainer = document.createElement('ul'),
-listContainerStyle = listContainer.style,
-cells,
-cellsWithinViewportCount = Math.ceil(winHeight/CELLHEIGHT) * 2,
-cellsFrag = document.createDocumentFragment(),
-scrollTimer,
-rAF,
-cellsOutOfViewportCount = cellsWithinViewportCount,
-pageCount = 20,
-scrollPos = 1,
-isScrollingDown,
-orderProp = Modernizr.prefixed('order');
-scrollTop = lastScrollTop = body.scrollTop,
-direction = 0,
-cellsState = {},
-isTopCellOutOfView = false,
-currentCell = null,
-ticking = false;
+    var winHeight = window.innerHeight,
+        body = document.body,
+        slice = [].slice,
+        rAF,
+        orderProp = Modernizr.prefixed('order');
+        scrollTop = lastScrollTop = body.scrollTop;
 
-rAF = Modernizr.prefixed('requestAnimationFrame', window) || function(callback) {
-    window.setTimeout(callback, 1000 / 60);
-};
+    rAF = Modernizr.prefixed('requestAnimationFrame', window) || function(callback) {
+        window.setTimeout(callback, 1000 / 60);
+    };
 
-function isTopElementOutOfViewport(el) {
-    var elemPostion = el.getBoundingClientRect();
+    function ScrollListView(opts) {
+        this.element = opts.element;
+        this.elementStyle = opts.element.style;
+        this.cells = null;
+        this.data = opts.data;
+        this.childElement = 'li';
+        this.CELLHEIGHT = opts.cellHeight;
+        this.cellsWithinViewportCount = Math.ceil(winHeight/this.CELLHEIGHT) * 2;
+        this.cellsOutOfViewportCount = this.cellsWithinViewportCount;
+        this.cellsFrag = document.createDocumentFragment();
+        this.direction = 0;
+        this.isScrollingDown = true;
+        this.currentCell = null;
+        this.cellIndex = 1;
+        this.isTopCellOutOfView = false;
+        this.renderFn = opts.renderFn;
+        this.renderCellFn = opts.renderCellFn;
 
-    return !!elemPostion && elemPostion.bottom <= -(CELLHEIGHT*2);
-}
-
-function isBottomElementOutOfViewport(el) {
-    var elemPostion = el.getBoundingClientRect();
-
-    return !!elemPostion && elemPostion.top > winHeight + (CELLHEIGHT*2);
-}
-
-function onScroll() {
-    clearTimeout(timer);
-    scrollTop = body.scrollTop;
-    direction = scrollTop - lastScrollTop;
-    //requestTick();
-    checkCells();
-    var timer = setTimeout(function(){
-        checkCells();
-    },200);
-}
-
-function requestTick() {
-    if(!ticking) {
-        rAF(checkCells);
-        ticking = true;
-    }
-}
-
-function getCurrentCell(count) {
-    return cells[count % cells.length];
-}
-
-function checkCells() {
-    cells = cells || slice.call(listContainer.children);
-    isScrollingDown = direction > 0;
-    currentCell = getCurrentCell(cellsOutOfViewportCount);
-
-    if(isScrollingDown) {
-        isTopCellOutOfView = isTopElementOutOfViewport(currentCell);
-
-        if(isTopCellOutOfView) {
-            cellsOutOfViewportCount++;
-            cellsState.index = cellsOutOfViewportCount;
-            listContainerStyle.paddingTop = parseInt(listContainerStyle.paddingTop || 0, 10) + CELLHEIGHT + 'px';
-            currentCell.style[orderProp] = cellsState.index;
-            currentCell.innerHTML = tmpl('tweet_tpl', tweets[cellsState.index-1]);
-        }
-    } else if(!isScrollingDown) {
-        currentCell = getCurrentCell(cellsOutOfViewportCount-1);
-        isBottomCellOutOfView = isBottomElementOutOfViewport(currentCell);
-
-        if(isBottomCellOutOfView && cellsOutOfViewportCount > cellsWithinViewportCount) {
-            cellsState.index = cells[cellsOutOfViewportCount-- % cells.length].style[orderProp] - 1;
-            listContainerStyle.paddingTop = parseInt(listContainerStyle.paddingTop || 0, 10) - CELLHEIGHT + 'px';
-            currentCell.style[orderProp] = cellsState.index;
-            currentCell.innerHTML = tmpl('tweet_tpl', tweets[cellsState.index-1]);
-        }
-
+        this.render();
+        window.addEventListener('scroll', this.onScroll.bind(this), false);
     }
 
-    lastScrollTop = body.scrollTop;
-    ticking = false;
-}
+    ScrollListView.prototype = {
+        render: function() {
+            if(!this.renderFn) {
+                console.error('You need to define a renderFn');
+            }
+            this.renderFn.call(this, this.cellsWithinViewportCount);
+        },
 
-for(var i = 0; i < cellsWithinViewportCount; i++) {
-    var cell = document.createElement('li'),
-    tweet = tweets[i];
+        renderCell: function(cell, index) {
+            if(!this.renderCellFn) {
+                console.error('You need to define a renderCellFn');
+            }
+            this.renderCellFn.call(this, cell, index);
+        },
 
-    cell.className = 'scrolllist__cell  gpuarise';
-    cell.innerHTML = tmpl('tweet_tpl', tweet);
-    cell.style[orderProp] = i+1;
-    cellsFrag.appendChild(cell);
-}
+        isTopElementOutOfViewport: function isTopElementOutOfViewport(el) {
+            var elemPostion = el.getBoundingClientRect();
 
-listContainer.className = 'scrolllist gpuarise';
-listContainerStyle.minHeight = tweets.length * CELLHEIGHT + 'px';
-listContainer.appendChild(cellsFrag);
-body.appendChild(listContainer);
+            return !!elemPostion && elemPostion.bottom <= -(this.CELLHEIGHT*2);
+        },
 
-window.addEventListener('scroll', onScroll, false);
+        isBottomElementOutOfViewport: function isBottomElementOutOfViewport(el) {
+            var elemPostion = el.getBoundingClientRect();
 
-//}(this, this.document);
+            return !!elemPostion && elemPostion.top > winHeight + (this.CELLHEIGHT*2);
+        },
+
+        onScroll: function onScroll() {
+            scrollTop = body.scrollTop;
+            this.direction = scrollTop - lastScrollTop;
+            this.checkCells();
+        },
+
+        getCurrentCell: function getCurrentCell(count) {
+            return this.cells[count % this.cells.length];
+        },
+
+        checkCells: function checkCells() {
+            this.cells = this.cells || slice.call(this.element.children);
+            this.isScrollingDown = this.direction > 0;
+            this.currentCell = this.getCurrentCell(this.cellsOutOfViewportCount);
+
+            if(this.isScrollingDown) {
+                this.isTopCellOutOfView = this.isTopElementOutOfViewport(this.currentCell);
+
+                if(this.isTopCellOutOfView && this.cellsOutOfViewportCount < this.data.length) {
+                    this.cellsOutOfViewportCount++;
+                    this.cellIndex = this.cellsOutOfViewportCount;
+                    this.elementStyle.paddingTop = parseInt(this.elementStyle.paddingTop || 0, 10) + this.CELLHEIGHT + 'px';
+                    this.currentCell.style[orderProp] = this.cellIndex;
+                    this.renderCell(this.currentCell, this.cellIndex-1);
+                }
+            } else if(!this.isScrollingDown) {
+                this.currentCell = this.getCurrentCell(this.cellsOutOfViewportCount-1);
+                this.isBottomCellOutOfView = this.isBottomElementOutOfViewport(this.currentCell);
+
+                if(this.isBottomCellOutOfView && this.cellsOutOfViewportCount > this.cellsWithinViewportCount) {
+                    this.cellIndex = this.cells[this.cellsOutOfViewportCount-- % this.cells.length].style[orderProp] - 1;
+                    this.elementStyle.paddingTop = parseInt(this.elementStyle.paddingTop || 0, 10) - this.CELLHEIGHT + 'px';
+                    this.currentCell.style[orderProp] = this.cellIndex;
+                    this.renderCell(this.currentCell, this.cellIndex-1);
+                }
+
+            }
+
+            lastScrollTop = body.scrollTop;
+        }
+    };
+
+    window['ScrollListView'] = ScrollListView;
+}(this, this.document));

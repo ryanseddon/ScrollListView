@@ -1,0 +1,111 @@
+<html>
+	<head>
+		<title>ScrollList</title>
+		<meta name="viewport" content="initial-scale=1">
+		<link rel="stylesheet" href="styles.css">
+	</head>
+	<body>
+        <ul class="scrolllist gpuarise"></ul>
+		<script type="text/javascript" src="../modernizr.min.js"></script>
+		<script src="timeline.json"></script>
+		<script src="tpl.js"></script>
+	    <script type="text/text" id="tweet_tpl">
+	    	<a class="u-objLeft" href="[href]">
+                <img src="<%=user.profile_image_url%>" >
+		    </a>
+		    <div class="u-sizeFill">
+		        <a class="u-linkComplex" href="https://twitter.com/<%=user.name%>">
+		            <span class="u-linkComplex-target"><%=user.name%></span>
+		            <span><%=user.screen_name%></span>
+		        </a>
+
+		        <p>
+		            <a class="u-linkComplex" href="#">
+		                @<span class="u-linkComplex-target"><%=user.screen_name%></span>
+		            </a>
+		            <%=text%>
+		        </p>
+
+		        <div class="u-textMute">
+		            <a href="#">
+		                <span>Expand</span>
+		                <span class="u-isHidden">Collapse</span>
+		            </a>
+		            <a class="u-linkComplex" href="#">
+		                <i class="Icon Icon--reply"></i>
+		                <span class="u-linkComplex-target">Reply</span>
+		            </a>
+		            <a href="#">
+		                <i class="Icon Icon--favorite"></i>
+		                <span class="u-isHiddenVisually">Favorite</span>
+		            </a>
+		        </div>
+		    </div>
+		</script>
+		<script src="../ScrollListView.js"></script>
+        <script>
+            var listContainer = document.querySelector('.scrolllist');
+            var scrollTimer;
+            var pageCount = 1;
+            var ScrollListView;
+
+            function render(count) {
+                var cellsFrag = document.createDocumentFragment();
+
+                for(var i = 0; i < count; i++) {
+                    var cell = document.createElement('li'),
+                        tweet = tweets[i];
+
+                    cell.className = 'scrolllist__cell gpuarise';
+                    cell.innerHTML = tmpl('tweet_tpl', tweet);
+                    cell.style.order = i+1;
+                    cellsFrag.appendChild(cell);
+                }
+
+                listContainer.appendChild(cellsFrag);
+                listContainer.style.minHeight = this.data.length * this.CELLHEIGHT + 'px';
+            }
+
+            function renderCell(cell, index) {
+                cell.innerHTML = tmpl('tweet_tpl', tweets[index]);
+            }
+
+            function getTweets(page, callback) {
+                var xhr = new XMLHttpRequest();
+                xhr.open('GET', '/page'+ page +'.json', true);
+                xhr.onreadystatechange = function() {
+                    if(xhr.readyState === 4 && xhr.status === 200) {
+                        callback(JSON.parse(xhr.responseText));
+                    } else if(xhr.status === 404) {
+                        window.removeEventListener('scroll', scrollFn, false);
+                    }
+                }
+                xhr.send();
+            }
+
+            getTweets(pageCount, function(data) {
+                scrollListView = new ScrollListView({
+                    element: listContainer,
+                    data: data,
+                    cellHeight: 150,
+                    renderFn: render,
+                    renderCellFn: renderCell
+                });
+            });
+
+            function scrollFn() {
+                clearTimeout(scrollTimer);
+                scrollTimer = setTimeout(function() {
+                    if(scrollListView.cellsOutOfViewportCount >= (scrollListView.data.length - scrollListView.cells.length)) {
+                        getTweets(++pageCount, function(data) {
+                            scrollListView.data = scrollListView.data.concat(data);
+                            listContainer.style.minHeight = scrollListView.data.length * scrollListView.CELLHEIGHT + 'px';
+                        })
+                    }
+                }, 250);
+            }
+
+            window.addEventListener('scroll', scrollFn, false);
+        </script>
+	</body>
+</html>
