@@ -5,7 +5,6 @@ function ScrollListView(opts) {
     this.elementStyle = opts.element.style;
     this.cells = null;
     this.data = opts.data;
-    this.childElement = 'li';
     this.CELLHEIGHT = opts.cellHeight;
     this.cellsWithinViewportCount = Math.ceil(winHeight/this.CELLHEIGHT) * 2;
     this.cellsOutOfViewportCount = this.cellsWithinViewportCount;

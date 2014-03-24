@@ -27,16 +27,10 @@
   "devDependencies": {
     "gulp": "~3.5.6",
     "gulp-browserify": "~0.5.0",
-    "gulp-concat": "~2.1.7",
     "gulp-uglify": "~0.2.1",
     "through": "~2.3.4",
-    "es6-module-transpiler": "~0.3.6",
-    "vinyl-source-stream": "~0.1.1",
-    "browserify": "~3.32.1",
-    "gulp-streamify": "0.0.4",
     "gulp-jshint": "~1.5.0",
-    "sweetify": "~0.3.1",
-    "es6-macros": "0.0.2",
-    "gulp-sweetjs": "~0.3.0"
+    "gulp-sweetjs": "~0.3.0",
+    "gulp-rename": "~1.2.0"
   }
 }

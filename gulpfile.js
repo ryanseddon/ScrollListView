@@ -1,6 +1,6 @@
 var gulp = require('gulp');
 var browserify = require('gulp-browserify');
-var concat = require('gulp-concat');
+var rename = require('gulp-rename');
 var uglify = require('gulp-uglify');
 var jshint = require('gulp-jshint');
 var sweetify = require('sweetify');
@@ -12,8 +12,8 @@ gulp.task('build', ['lint'], function() {
         .pipe(browserify({
             standalone: 'ScrollListView'
         }))
-        .pipe(concat('ScrollListView.js'))
-        //.pipe(uglify())
+        .pipe(rename('ScrollListView.js'))
+        .pipe(uglify())
         .pipe(gulp.dest('./dist'));
 });
 
