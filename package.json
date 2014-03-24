@@ -1,0 +1,42 @@
+{
+  "name": "ScrollListView",
+  "version": "0.1.0",
+  "description": "Performant scrolling over huge lists of data.",
+  "main": "ScrollListView.js",
+  "directories": {
+    "example": "example"
+  },
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/ryanseddon/ScrollListView"
+  },
+  "keywords": [
+    "flexbox",
+    "scrolling",
+    "performance"
+  ],
+  "author": "Ryan Seddon",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/ryanseddon/ScrollListView/issues"
+  },
+  "homepage": "https://github.com/ryanseddon/ScrollListView",
+  "devDependencies": {
+    "gulp": "~3.5.6",
+    "gulp-browserify": "~0.5.0",
+    "gulp-concat": "~2.1.7",
+    "gulp-uglify": "~0.2.1",
+    "through": "~2.3.4",
+    "es6-module-transpiler": "~0.3.6",
+    "vinyl-source-stream": "~0.1.1",
+    "browserify": "~3.32.1",
+    "gulp-streamify": "0.0.4",
+    "gulp-jshint": "~1.5.0",
+    "sweetify": "~0.3.1",
+    "es6-macros": "0.0.2",
+    "gulp-sweetjs": "~0.3.0"
+  }
+}
