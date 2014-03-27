@@ -5,6 +5,7 @@ var uglify = require('gulp-uglify');
 var jshint = require('gulp-jshint');
 var sweetify = require('sweetify');
 var sweetjs = require('gulp-sweetjs');
+var connect = require('gulp-connect');
 
 gulp.task('build', ['lint'], function() {
     gulp.src('src/main.js')
@@ -23,9 +24,12 @@ gulp.task('lint', function() {
         .pipe(jshint.reporter('default'));
 });
 
-// The default task (called when you run `gulp`)
+gulp.task('serve', connect.server({
+    root: [__dirname],
+    livereload: true
+}));
+
 gulp.task('default', ['build'], function() {
-  // Watch files and run tasks if they change
   gulp.watch('src/*.js', function(event) {
     gulp.run('build');
   });
