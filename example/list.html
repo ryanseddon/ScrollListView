@@ -6,7 +6,6 @@
 	</head>
 	<body>
 		<ul id="list" class="scrolllist gpuarise"></ul>
-		<script type="text/javascript" src="modernizr.min.js"></script>
 		<script src="tpl.js"></script>
 	    <script type="text/html" id="tweets_tpl">
 	      <% for ( var k = 0; k < tweets.length; k++ ) { %>
@@ -67,7 +66,7 @@
 					};
 					xhr.send();
 				}
-			
+
 				window.addEventListener('load', function(){
 					listContainer = document.getElementById('list');
 
@@ -78,7 +77,7 @@
 				}, false);
 
 				window.addEventListener('scroll', function() {
-					clearTimeout(scrollTimer); 
+					clearTimeout(scrollTimer);
 					scrollTimer = setTimeout(function() {
 	                    if(body.scrollTop + window.screen.height >= body.scrollHeight - (150*4)) {
 	                    	loadTweets(function(data) {
