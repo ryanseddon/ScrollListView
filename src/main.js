@@ -1,12 +1,17 @@
-import { winHeight, body, slice, orderProp, scrollTop, lastScrollTop } from './utils';
+import { winHeight, body, slice, orderProp, scrollTop, lastScrollTop, resizeTimer } from './utils';
 
 function ScrollListView(opts) {
+    var container = opts.element.parentNode || body,
+        containerHeight = container.offsetHeight;
+
     this.element = opts.element;
     this.elementStyle = opts.element.style;
+    this.container = container;
+    this.containerHeight = containerHeight;
     this.cells = null;
     this.data = opts.data;
     this.CELLHEIGHT = opts.cellHeight;
-    this.cellsWithinViewportCount = Math.ceil(winHeight/this.CELLHEIGHT) * 2;
+    this.cellsWithinViewportCount = Math.ceil(this.containerHeight/this.CELLHEIGHT) * 2;
     this.cellsOutOfViewportCount = this.cellsWithinViewportCount;
     this.cellsFrag = document.createDocumentFragment();
     this.direction = 0;
@@ -18,7 +23,8 @@ function ScrollListView(opts) {
     this.renderCellFn = opts.renderCellFn;
 
     this.render();
-    window.addEventListener('scroll', this.onScroll.bind(this), false);
+    this.container.addEventListener('scroll', this.onScroll.bind(this), false);
+    window.addEventListener('resize', this.onResize.bind(this), false);
 }
 
 module.exports = ScrollListView;
@@ -47,13 +53,20 @@ ScrollListView.prototype = {
     isBottomElementOutOfViewport: function isBottomElementOutOfViewport(el) {
         var elemPostion = el.getBoundingClientRect();
 
-        return !!elemPostion && elemPostion.top > winHeight + (this.CELLHEIGHT*2);
+        return !!elemPostion && elemPostion.top > this.containerHeight + (this.CELLHEIGHT*2);
     },
 
     onScroll: function onScroll() {
-        scrollTop = body.scrollTop;
+        scrollTop = this.container.scrollTop;
         this.direction = scrollTop - lastScrollTop;
         this.checkCells();
+    },
+
+    onResize: function onResize(e) {
+        clearTimeout(resizeTimer);
+        resizeTimer = setTimeout(function() {
+            this.containerHeight = this.container.offsetHeight;
+        }.bind(this), 250);
     },
 
     getCurrentCell: function getCurrentCell(count) {
@@ -88,7 +101,7 @@ ScrollListView.prototype = {
 
         }
 
-        lastScrollTop = body.scrollTop;
+        lastScrollTop = this.container.scrollTop;
     }
 };
 

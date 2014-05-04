@@ -31,21 +31,11 @@ function getTweets(page, callback) {
         if(xhr.readyState === 4 && xhr.status === 200) {
             callback(JSON.parse(xhr.responseText));
         } else if(xhr.status === 404) {
-            window.removeEventListener('scroll', scrollFn, false);
+            scrollListView.container.removeEventListener('scroll', scrollFn, false);
         }
     }
     xhr.send();
 }
-
-getTweets(pageCount, function(data) {
-    scrollListView = new ScrollListView({
-        element: listContainer,
-        data: data,
-        cellHeight: 150,
-        renderFn: render,
-        renderCellFn: renderCell
-    });
-});
 
 function scrollFn() {
     clearTimeout(scrollTimer);
@@ -59,5 +49,16 @@ function scrollFn() {
     }, 250);
 }
 
-window.addEventListener('scroll', scrollFn, false);
+getTweets(pageCount, function(data) {
+    scrollListView = new ScrollListView({
+        element: listContainer,
+        data: data,
+        cellHeight: 150,
+        renderFn: render,
+        renderCellFn: renderCell
+    });
+
+    scrollListView.container.addEventListener('scroll', scrollFn, false);
+});
+
 

@@ -12,6 +12,13 @@
 	box-sizing: border-box;
 }
 
+.container {
+    width: 60%;
+    margin: 10% auto;
+    height: 80%;
+    overflow: auto;
+}
+
 .gpuarise {
 	-webkit-transform: translateZ(0);
 	transform: translateZ(0);
