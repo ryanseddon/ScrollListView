@@ -12,9 +12,14 @@
 	box-sizing: border-box;
 }
 
+body > h1 {
+    width: 60%;
+    margin: 10px auto;
+}
+
 .container {
     width: 60%;
-    margin: 10% auto;
+    margin: 30px auto;
     height: 80%;
     overflow: auto;
 }

@@ -3,7 +3,6 @@ var browserify = require('gulp-browserify');
 var rename = require('gulp-rename');
 var uglify = require('gulp-uglify');
 var jshint = require('gulp-jshint');
-var sweetify = require('sweetify');
 var sweetjs = require('gulp-sweetjs');
 var connect = require('gulp-connect');
 
