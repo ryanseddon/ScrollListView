@@ -1,4 +1,5 @@
 import { winHeight, body, slice, orderProp, scrollTop, lastScrollTop, resizeTimer } from './utils';
+require('./styles.css');
 
 function ScrollListView(opts) {
     var container = opts.element.parentNode || body,
@@ -31,10 +32,24 @@ module.exports = ScrollListView;
 
 ScrollListView.prototype = {
     render: function() {
+        var index, css,
+            height = this.CELLHEIGHT;
         if(!this.renderFn) {
             console.error('You need to define a renderFn');
         }
         this.renderFn.call(this, this.cellsWithinViewportCount);
+        [].slice.call(this.element.children).forEach(function(cell, i) {
+            index = i+1;
+            css = [
+                'height:', height, 'px;',
+                'order:', index, ';',
+                '-webkit-order:', index, ';'
+            ].join('');
+
+            cell.style.cssText = css;
+        });
+
+        this.element.style.minHeight = this.cellsWithinViewportCount * this.CELLHEIGHT + 'px';
     },
 
     renderCell: function(cell, index) {

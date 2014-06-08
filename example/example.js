@@ -1,4 +1,4 @@
-var listContainer = document.querySelector('.scrolllist');
+var listContainer = document.querySelector('.ScrollListView');
 var scrollTimer;
 var pageCount = 1;
 var ScrollListView;
@@ -10,14 +10,12 @@ function render(count) {
         var cell = document.createElement('li'),
         tweet = this.data[i];
 
-        cell.className = 'scrolllist__cell gpuarise';
+        cell.className = 'ScrollListView-cell';
         cell.innerHTML = tmpl('tweet_tpl', tweet);
-        cell.style.order = i+1;
         cellsFrag.appendChild(cell);
     }
 
     listContainer.appendChild(cellsFrag);
-    listContainer.style.minHeight = this.data.length * this.CELLHEIGHT + 'px';
 }
 
 function renderCell(cell, index) {

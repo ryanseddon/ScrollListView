@@ -5,12 +5,14 @@ var uglify = require('gulp-uglify');
 var jshint = require('gulp-jshint');
 var sweetjs = require('gulp-sweetjs');
 var connect = require('gulp-connect');
+var cssify = require('cssify');
 
 gulp.task('build', ['lint'], function() {
     gulp.src('src/main.js')
         .pipe(sweetjs({modules: ['./src/module.sjs'], readableNames: true}))
         .pipe(browserify({
-            standalone: 'ScrollListView'
+            standalone: 'ScrollListView',
+            transform: [cssify]
         }))
         .pipe(rename('ScrollListView.js'))
         .pipe(uglify())

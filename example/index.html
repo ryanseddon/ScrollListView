@@ -1,50 +1,35 @@
 <html>
-	<head>
-		<title>ScrollList</title>
-		<meta name="viewport" content="initial-scale=1">
-		<link rel="stylesheet" href="styles.css">
-	</head>
-	<body>
+    <head>
+        <title>ScrollList</title>
+        <meta name="viewport" content="initial-scale=1">
+        <link rel="stylesheet" href="styles.css">
+    </head>
+    <body>
         <h1>Infinite list *with* ScrollListView</h1>
         <div class="container">
-            <ul class="scrolllist gpuarise"></ul>
+            <ul class="ScrollListView"></ul>
         </div>
 
-		<script src="tpl.js"></script>
-	    <script type="text/text" id="tweet_tpl">
-	    	<a class="u-objLeft" href="[href]">
-                <img src="<%=user.profile_image_url%>" >
-		    </a>
-		    <div class="u-sizeFill">
-		        <a class="u-linkComplex" href="https://twitter.com/<%=user.name%>">
-		            <span class="u-linkComplex-target"><%=user.name%></span>
-		            <span><%=user.screen_name%></span>
-		        </a>
+        <script src="tpl.js"></script>
+        <script type="text/text" id="tweet_tpl">
+            <a class="u-objLeft" href="https://twitter.com/<%=user.name%>">
+                <img src="<%=user.profile_image_url%>">
+            </a>
+            <div class="u-sizeFill">
+                <a href="https://twitter.com/<%=user.name%>">
+                    <span><%=user.name%></span>
+                    <span><%=user.screen_name%></span>
+                </a>
 
-		        <p>
-		            <a class="u-linkComplex" href="#">
-		                @<span class="u-linkComplex-target"><%=user.screen_name%></span>
-		            </a>
-		            <%=text%>
-		        </p>
-
-		        <div class="u-textMute">
-		            <a href="#">
-		                <span>Expand</span>
-		                <span class="u-isHidden">Collapse</span>
-		            </a>
-		            <a class="u-linkComplex" href="#">
-		                <i class="Icon Icon--reply"></i>
-		                <span class="u-linkComplex-target">Reply</span>
-		            </a>
-		            <a href="#">
-		                <i class="Icon Icon--favorite"></i>
-		                <span class="u-isHiddenVisually">Favorite</span>
-		            </a>
-		        </div>
-		    </div>
-		</script>
-		<script src="../dist/ScrollListView.js"></script>
+                <p>
+                    <a href="#">
+                        @<span><%=user.screen_name%></span>
+                    </a>
+                    <%=text%>
+                </p>
+            </div>
+        </script>
+        <script src="../dist/ScrollListView.js"></script>
         <script src="example.js"></script>
-	</body>
+    </body>
 </html>

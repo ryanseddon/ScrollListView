@@ -1,95 +1,77 @@
 <html>
-	<head>
-		<title>ScrollList</title>
-		<meta name="viewport" content="initial-scale=1">
-		<link rel="stylesheet" href="styles.css">
-	</head>
-	<body>
+    <head>
+        <title>ScrollList</title>
+        <meta name="viewport" content="initial-scale=1">
+        <link rel="stylesheet" href="styles.css">
+    </head>
+    <body>
         <h1>Inifinite list *without* ScrollListView</h1>
         <div class="container">
-            <ul id="list" class="scrolllist gpuarise"></ul>
+            <ul id="list" class="ScrollListView gpuarise"></ul>
         </div>
-		<script src="tpl.js"></script>
-	    <script type="text/html" id="tweets_tpl">
-	      <% for ( var k = 0; k < tweets.length; k++ ) { %>
-	        <li class="scrolllist__cell gpuarise">
-			    <a class="u-objRight" href="#">
-			        <%=tweets[k].user.created_at%>
-			    </a>
-			    <a class="u-objLeft" href="[href]">
-			        <img src="<%=tweets[k].user.profile_image_url%>" alt="<%=tweets[k].user.screen_name%>'s avatar">
-			    </a>
-			    <div class="u-sizeFill">
-			        <a class="u-linkComplex" href="<%=tweets[k].url%>">
-			            <span class="u-linkComplex-target"><%=tweets[k].user.name%></span>
-			            <span><%=tweets[k].user.screen_name%></span>
-			        </a>
+        <script src="tpl.js"></script>
+        <script type="text/html" id="tweets_tpl">
+            <% for ( var k = 0; k < tweets.length; k++ ) { %>
+                <li class="ScrollListView-cell">
+                    <a class="u-objLeft" href="https://twitter.com/<%=user.name%>">
+                        <img src="<%=user.profile_image_url%>">
+                    </a>
+                    <div class="u-sizeFill">
+                        <a href="https://twitter.com/<%=user.name%>">
+                            <span><%=user.name%></span>
+                            <span><%=user.screen_name%></span>
+                        </a>
 
-			        <p>
-			            <a class="u-linkComplex" href="#">
-			                @<span class="u-linkComplex-target"><%=tweets[k].user.screen_name%></span>
-			            </a>
-			            <%=tweets[k].text%>
-			        </p>
+                        <p>
+                        <a href="#">
+                            @<span><%=user.screen_name%></span>
+                        </a>
+                        <%=text%>
+                        </p>
+                    </div>
+                </li>
+            <% } %>
+        </script>
+        <script>
+            (function(){
+                var scrollTimer,
+                    body,
+                    listContainer;
+                    currentPage = 1;
 
-			        <div class="u-textMute">
-			            <a href="#">
-			                <span>Expand</span>
-			                <span class="u-isHidden">Collapse</span>
-			            </a>
-			            <a class="u-linkComplex" href="#">
-			                <i class="Icon Icon--reply"></i>
-			                <span class="u-linkComplex-target">Reply</span>
-			            </a>
-			            <a href="#">
-			                <i class="Icon Icon--favorite"></i>
-			                <span class="u-isHiddenVisually">Favorite</span>
-			            </a>
-			        </div>
-			    </div>
-			</li>
-	      <% } %>
-	    </script>
-		<script>
-			(function(){
-				var scrollTimer,
-					body,
-					listContainer;
-					currentPage = 1;
+                function loadTweets(callback) {
+                    var xhr = new XMLHttpRequest();
 
-				function loadTweets(callback) {
-					var xhr = new XMLHttpRequest();
+                    xhr.open('GET', 'page' + currentPage + '.json');
+                    xhr.onreadystatechange = function(e) {
+                        if(xhr.readyState === 4 && xhr.status === 200) {
+                            currentPage++;
+                            callback({tweets: JSON.parse(xhr.responseText)});
+                        }
+                    };
+                    xhr.send();
+                }
 
-					xhr.open('GET', 'page' + currentPage + '.json');
-					xhr.onreadystatechange = function(e) {
-						if(xhr.readyState === 4 && xhr.status === 200) {
-							currentPage++;
-							callback({tweets: JSON.parse(xhr.responseText)});
-						}
-					};
-					xhr.send();
-				}
+                window.addEventListener('load', function(){
+                    listContainer = document.getElementById('list');
 
-				window.addEventListener('load', function(){
-					listContainer = document.getElementById('list');
+                    body = document.body;
+                    loadTweets(function(data) {
+                        listContainer.innerHTML += tmpl('tweets_tpl', data);
+                    });
+                }, false);
 
-					body = document.body;
-					loadTweets(function(data) {
-						listContainer.innerHTML += tmpl('tweets_tpl', data);
-					});
-				}, false);
-
-				window.addEventListener('scroll', function() {
-					clearTimeout(scrollTimer);
-					scrollTimer = setTimeout(function() {
-	                    if(body.scrollTop + window.screen.height >= body.scrollHeight - (150*4)) {
-	                    	loadTweets(function(data) {
-								listContainer.innerHTML += tmpl('tweets_tpl', data);
-							});
-	                    }
-	                }, 250)
-				}, false);
-			}());
-		</script>
-	</body>
+                window.addEventListener('scroll', function() {
+                    clearTimeout(scrollTimer);
+                    scrollTimer = setTimeout(function() {
+                        if(body.scrollTop + window.screen.height >= body.scrollHeight - (150*4)) {
+                            loadTweets(function(data) {
+                                listContainer.innerHTML += tmpl('tweets_tpl', data);
+                                });
+                            }
+                    }, 250)
+                }, false);
+            }());
+        </script>
+    </body>
 </html>
