@@ -2,12 +2,9 @@
   "name": "ScrollListView",
   "version": "0.1.0",
   "description": "Performant scrolling over huge lists of data.",
-  "main": "ScrollListView.js",
+  "main": "./src/main.js",
   "directories": {
-    "example": "example"
-  },
-  "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "example": "./example"
   },
   "repository": {
     "type": "git",
@@ -28,7 +25,6 @@
   "devDependencies": {
     "gulp": "~3.6.0",
     "gulp-jshint": "^1.7.1",
-    "gulp-rename": "~1.2.0",
     "gulp-connect": "~1.0.10",
     "connect-livereload": "^0.4.0",
     "es6-loader": "^0.2.0",
