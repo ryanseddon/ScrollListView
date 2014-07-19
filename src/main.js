@@ -3,7 +3,7 @@ require('./styles.css');
 
 function ScrollListView(opts) {
     var container = opts.element.parentNode || body,
-        containerHeight = container.offsetHeight;
+        containerHeight = container.offsetHeight || body.offsetHeight;
 
     this.element = opts.element;
     this.elementStyle = opts.element.style;
@@ -24,21 +24,21 @@ function ScrollListView(opts) {
     this.renderCellFn = opts.renderCellFn;
 
     this.render();
-    this.container.addEventListener('scroll', this.onScroll.bind(this), false);
-    window.addEventListener('resize', this.onResize.bind(this), false);
+    this.container.addEventListener('scroll', () => this.onScroll(), false);
+    window.addEventListener('resize', () => this.onResize(), false);
 }
 
-module.exports = ScrollListView;
-
 ScrollListView.prototype = {
-    render: function() {
+    render() {
         var index, css,
             height = this.CELLHEIGHT;
+
         if(!this.renderFn) {
             console.error('You need to define a renderFn');
         }
+
         this.renderFn.call(this, this.cellsWithinViewportCount);
-        [].slice.call(this.element.children).forEach(function(cell, i) {
+        slice.call(this.element.children).forEach(function(cell, i) {
             index = i+1;
             css = [
                 'height:', height, 'px;',
@@ -52,43 +52,43 @@ ScrollListView.prototype = {
         this.element.style.minHeight = this.cellsWithinViewportCount * this.CELLHEIGHT + 'px';
     },
 
-    renderCell: function(cell, index) {
+    renderCell(cell, index) {
         if(!this.renderCellFn) {
             console.error('You need to define a renderCellFn');
         }
         this.renderCellFn.call(this, cell, index);
     },
 
-    isTopElementOutOfViewport: function isTopElementOutOfViewport(el) {
+    isTopElementOutOfViewport(el) {
         var elemPostion = el.getBoundingClientRect();
 
         return !!elemPostion && elemPostion.bottom <= -(this.CELLHEIGHT*2);
     },
 
-    isBottomElementOutOfViewport: function isBottomElementOutOfViewport(el) {
+    isBottomElementOutOfViewport(el) {
         var elemPostion = el.getBoundingClientRect();
 
         return !!elemPostion && elemPostion.top > this.containerHeight + (this.CELLHEIGHT*2);
     },
 
-    onScroll: function onScroll() {
+    onScroll() {
         scrollTop = this.container.scrollTop;
         this.direction = scrollTop - lastScrollTop;
         this.checkCells();
     },
 
-    onResize: function onResize(e) {
+    onResize(e) {
         clearTimeout(resizeTimer);
         resizeTimer = setTimeout(function() {
             this.containerHeight = this.container.offsetHeight;
         }.bind(this), 250);
     },
 
-    getCurrentCell: function getCurrentCell(count) {
+    getCurrentCell(count) {
         return this.cells[count % this.cells.length];
     },
 
-    checkCells: function checkCells() {
+    checkCells() {
         this.cells = this.cells || slice.call(this.element.children);
         this.isScrollingDown = this.direction > 0;
         this.currentCell = this.getCurrentCell(this.cellsOutOfViewportCount);
@@ -119,4 +119,6 @@ ScrollListView.prototype = {
         lastScrollTop = this.container.scrollTop;
     }
 };
+
+module.exports = ScrollListView;
 

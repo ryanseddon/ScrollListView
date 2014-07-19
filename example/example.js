@@ -38,7 +38,11 @@ function getTweets(page, callback) {
 function scrollFn() {
     clearTimeout(scrollTimer);
     scrollTimer = setTimeout(function() {
-        if(scrollListView.cellsOutOfViewportCount >= (scrollListView.data.length - scrollListView.cells.length)) {
+        var container = scrollListView.element.parentNode,
+            scrollHeight = container.scrollHeight,
+            scrollOffset = container.scrollTop + container.offsetHeight;
+
+        if(scrollOffset >= scrollHeight - scrollListView.CELLHEIGHT*3) {
             getTweets(++pageCount, function(data) {
                 scrollListView.data = scrollListView.data.concat(data);
                 listContainer.style.minHeight = scrollListView.data.length * scrollListView.CELLHEIGHT + 'px';

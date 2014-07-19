@@ -6,10 +6,5 @@ var winHeight = window.innerHeight,
     lastScrollTop = body.scrollTop,
     resizeTimer;
 
-exports.winHeight = winHeight;
-exports.body = body;
-exports.slice = slice;
-exports.orderProp = orderProp;
-exports.scrollTop = scrollTop;
-exports.lastScrollTop = lastScrollTop;
-exports.resizeTimer = resizeTimer;
+export { winHeight, body, slice, orderProp, scrollTop, lastScrollTop, resizeTimer };
+

@@ -7,26 +7,26 @@
     <body>
         <h1>Inifinite list *without* ScrollListView</h1>
         <div class="container">
-            <ul id="list" class="ScrollListView gpuarise"></ul>
+            <ul id="list" class="ScrollListView"></ul>
         </div>
         <script src="tpl.js"></script>
         <script type="text/html" id="tweets_tpl">
             <% for ( var k = 0; k < tweets.length; k++ ) { %>
-                <li class="ScrollListView-cell">
-                    <a class="u-objLeft" href="https://twitter.com/<%=user.name%>">
-                        <img src="<%=user.profile_image_url%>">
+                <li class="ScrollListView-cell" style="height: 150px">
+                    <a class="u-objLeft" href="https://twitter.com/<%=tweets[k].user.name%>">
+                        <img src="<%=tweets[k].user.profile_image_url%>">
                     </a>
                     <div class="u-sizeFill">
-                        <a href="https://twitter.com/<%=user.name%>">
-                            <span><%=user.name%></span>
-                            <span><%=user.screen_name%></span>
+                        <a href="https://twitter.com/<%=tweets[k].user.name%>">
+                            <span><%=tweets[k].user.name%></span>
+                            <span><%=tweets[k].user.screen_name%></span>
                         </a>
 
                         <p>
                         <a href="#">
-                            @<span><%=user.screen_name%></span>
+                            @<span><%=tweets[k].user.screen_name%></span>
                         </a>
-                        <%=text%>
+                        <%=tweets[k].text%>
                         </p>
                     </div>
                 </li>
