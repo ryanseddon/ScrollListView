@@ -1,0 +1,77 @@
+<html>
+    <head>
+        <title>ScrollList</title>
+        <meta name="viewport" content="initial-scale=1">
+        <link rel="stylesheet" href="styles.css">
+    </head>
+    <body>
+        <h1>Inifinite list *without* ScrollListView</h1>
+        <div class="container">
+            <ul id="list" class="ScrollListView"></ul>
+        </div>
+        <script src="tpl.js"></script>
+        <script type="text/html" id="tweets_tpl">
+            <% for ( var k = 0; k < tweets.length; k++ ) { %>
+                <li class="ScrollListView-cell" style="height: 150px">
+                    <a class="u-objLeft" href="https://twitter.com/<%=tweets[k].user.name%>">
+                        <img src="<%=tweets[k].user.profile_image_url%>">
+                    </a>
+                    <div class="u-sizeFill">
+                        <a href="https://twitter.com/<%=tweets[k].user.name%>">
+                            <span><%=tweets[k].user.name%></span>
+                            <span><%=tweets[k].user.screen_name%></span>
+                        </a>
+
+                        <p>
+                        <a href="#">
+                            @<span><%=tweets[k].user.screen_name%></span>
+                        </a>
+                        <%=tweets[k].text%>
+                        </p>
+                    </div>
+                </li>
+            <% } %>
+        </script>
+        <script>
+            (function(){
+                var scrollTimer,
+                    body,
+                    listContainer;
+                    currentPage = 1;
+
+                function loadTweets(callback) {
+                    var xhr = new XMLHttpRequest();
+
+                    xhr.open('GET', 'page' + currentPage + '.json');
+                    xhr.onreadystatechange = function(e) {
+                        if(xhr.readyState === 4 && xhr.status === 200) {
+                            currentPage++;
+                            callback({tweets: JSON.parse(xhr.responseText)});
+                        }
+                    };
+                    xhr.send();
+                }
+
+                window.addEventListener('load', function(){
+                    listContainer = document.getElementById('list');
+
+                    body = document.body;
+                    loadTweets(function(data) {
+                        listContainer.innerHTML += tmpl('tweets_tpl', data);
+                    });
+                }, false);
+
+                window.addEventListener('scroll', function() {
+                    clearTimeout(scrollTimer);
+                    scrollTimer = setTimeout(function() {
+                        if(body.scrollTop + window.screen.height >= body.scrollHeight - (150*4)) {
+                            loadTweets(function(data) {
+                                listContainer.innerHTML += tmpl('tweets_tpl', data);
+                                });
+                            }
+                    }, 250)
+                }, false);
+            }());
+        </script>
+    </body>
+</html>
