@@ -31,7 +31,7 @@
         <h1>
 <a name="scrolllistview" class="anchor" href="#scrolllistview"><span class="octicon octicon-link"></span></a>ScrollListView</h1>
 
-<p>ScrollListView.js is a library that allows you to scroll over large data sets without get a performance impact. It does this though a clever algorithm of re-using a fixed number of cells and as you scroll repaints them beneath the last item.</p>
+<p>ScrollListView.js is a library that allows you to scroll over large data sets without get a performance impact. It does this though a clever algorithm of re-using a fixed number of cells and as you scroll repaints them beneath the last item. Think iOS UITableView for the web.</p>
 
 <h2>
 <a name="demos" class="anchor" href="#demos"><span class="octicon octicon-link"></span></a>Demos</h2>
@@ -46,29 +46,31 @@
 <h2>
 <a name="installation" class="anchor" href="#installation"><span class="octicon octicon-link"></span></a>Installation</h2>
 
-<h3>
-<a name="bower" class="anchor" href="#bower"><span class="octicon octicon-link"></span></a>Bower</h3>
-
-<p>To install this library through bower run the following command</p>
-
-<div class="highlight highlight-js"><pre><span class="nx">bower</span> <span class="nx">install</span> <span class="nx">ScrollListView</span>
+<div class="highlight highlight-js"><pre><span class="nx">npm</span> <span class="nx">install</span> <span class="nx">ScrollListView</span>
 </pre></div>
 
-<p>Include the script in your website it can be placed anywhere or combined with other scripts.</p>
+<p>This is a UMD package so if you just include the script in your page it'll attach to the window.</p>
+
+<p>But if you prefer a module system this will work fine with commonjs or AMD modules just fine.</p>
 
 <h3>
 <a name="usage" class="anchor" href="#usage"><span class="octicon octicon-link"></span></a>Usage</h3>
 
-<p>For a live example I highly recommend you check out the demo and view-source. To see how to you can configure it readon.</p>
+<p>For a live example I highly recommend you check out the <a href="http://ryanseddon.github.io/ScrollListView/example/">demo</a> and view-source. To see how to you can configure it readon.</p>
 
-<div class="highlight highlight-js"><pre><span class="kd">var</span> <span class="nx">scrollListView</span> <span class="o">=</span> <span class="k">new</span> <span class="nx">ScrollListView</span><span class="p">({</span>
-    <span class="nx">element</span><span class="o">:</span> <span class="nb">document</span><span class="p">.</span><span class="nx">querySelector</span><span class="p">(</span><span class="s1">'.list'</span><span class="p">),</span>
-    <span class="nx">data</span><span class="o">:</span> <span class="p">[...</span> <span class="nx">array</span> <span class="nx">of</span> <span class="nx">objects</span> <span class="nx">to</span> <span class="nx">render</span><span class="p">],</span>
-    <span class="nx">cellHeight</span><span class="o">:</span> <span class="mi">150</span><span class="p">,</span>
-    <span class="nx">renderFn</span><span class="o">:</span> <span class="nx">render</span><span class="p">,</span>
-    <span class="nx">renderCellFn</span><span class="o">:</span> <span class="nx">renderCellFn</span>
+<div class="highlight highlight-js"><pre><span class="kd">var</span> <span class="nx">ScrollListView</span> <span class="o">=</span> <span class="nx">require</span><span class="p">(</span><span class="s1">'ScrollListView'</span><span class="p">);</span>
+
+<span class="kd">var</span> <span class="nx">scrollListView</span> <span class="o">=</span> <span class="k">new</span> <span class="nx">ScrollListView</span><span class="p">({</span>
+  <span class="nx">element</span><span class="o">:</span> <span class="nb">document</span><span class="p">.</span><span class="nx">querySelector</span><span class="p">(</span><span class="s1">'.list'</span><span class="p">),</span>
+  <span class="nx">data</span><span class="o">:</span> <span class="p">[...</span> <span class="nx">array</span> <span class="nx">of</span> <span class="nx">objects</span> <span class="nx">to</span> <span class="nx">render</span><span class="p">],</span>
+  <span class="nx">cellHeight</span><span class="o">:</span> <span class="mi">150</span><span class="p">,</span>
+  <span class="nx">renderFn</span><span class="o">:</span> <span class="nx">render</span><span class="p">,</span>
+  <span class="nx">renderCellFn</span><span class="o">:</span> <span class="nx">renderCellFn</span>
 <span class="p">});</span>
 </pre></div>
+
+<h4>
+<a name="API" class="anchor" href="#API"><span class="octicon octicon-link"></span></a>API</h4>
 
 <table>
 <tr>
@@ -146,6 +148,6 @@ This content is released under the MIT license <a href="http://ryanseddon.mit-li
       </footer>
     </div>
     <script src="javascripts/scale.fix.js"></script>
-    
+
   </body>
 </html>
