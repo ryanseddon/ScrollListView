@@ -1,6 +1,8 @@
 # ScrollListView
 
-ScrollListView.js is a library that allows you to scroll over large data sets without get a performance impact. It does this though a clever algorithm of re-using a fixed number of cells and as you scroll repaints them beneath the last item.
+ScrollListView.js is a library that allows you to scroll over large data sets without get a performance impact.
+It does this though a clever algorithm of re-using a fixed number of cells and as you scroll repaints them beneath the last item.
+Think iOS UITableView for the web.
 
 ## Context
 
@@ -8,12 +10,8 @@ Take a look at the [article](http://www.thecssninja.com/javascript/scrolllistvie
 
 ## Installation
 
-### Bower
-
-To install this library through bower run the following command
-
 ```js
-bower install ScrollListView
+npm install ScrollListView
 ```
 
 Include the script in your website it can be placed anywhere or combined with other scripts.
@@ -23,14 +21,22 @@ Include the script in your website it can be placed anywhere or combined with ot
 For a live example I highly recommend you check out the demo and view-source. To see how to you can configure it readon.
 
 ```js
+var ScrollListView = require('ScrollListView');
+
 var scrollListView = new ScrollListView({
-    element: document.querySelector('.list'),
-    data: [... array of objects to render],
-    cellHeight: 150,
-    renderFn: render,
-    renderCellFn: renderCellFn
+  element: document.querySelector('.list'),
+  data: [... array of objects to render],
+  cellHeight: 150,
+  renderFn: render,
+  renderCellFn: renderCellFn
 });
 ```
+
+This is a UMD package so if you just include the script in your page it'll attach to the window.
+
+But if you prefer a module system this will work fine with commonjs or AMD modules just fine.
+
+#### API
 
 <table>
     <tr>
@@ -63,20 +69,20 @@ I'll take the example code and walk you through how I chose to render my ScrollL
 
 ```js
 function render(count) {
-    var cellsFrag = document.createDocumentFragment();
+  var cellsFrag = document.createDocumentFragment();
 
-    for(var i = 0; i < count; i++) {
-        var cell = document.createElement('li'),
+  for(var i = 0; i < count; i++) {
+    var cell = document.createElement('li'),
         tweet = this.data[i];
 
-        cell.className = 'scrolllist__cell gpuarise';
-        cell.innerHTML = tmpl('tweet_tpl', tweet);
-        cell.style.order = i+1;
-        cellsFrag.appendChild(cell);
-    }
+    cell.className = 'scrolllist__cell gpuarise';
+    cell.innerHTML = tmpl('tweet_tpl', tweet);
+    cell.style.order = i+1;
+    cellsFrag.appendChild(cell);
+  }
 
-    listContainer.appendChild(cellsFrag);
-    listContainer.style.minHeight = this.data.length * this.CELLHEIGHT + 'px';
+  listContainer.appendChild(cellsFrag);
+  listContainer.style.minHeight = this.data.length * this.CELLHEIGHT + 'px';
 }
 ```
 
@@ -90,7 +96,7 @@ The `renderCell` method is even easier.
 
 ```js
 function renderCell(cell, index) {
-    cell.innerHTML = tmpl('tweet_tpl', this.data[index]);
+  cell.innerHTML = tmpl('tweet_tpl', this.data[index]);
 }
 ```
 
