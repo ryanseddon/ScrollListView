@@ -18,7 +18,9 @@ Include the script in your website it can be placed anywhere or combined with ot
 
 ### Usage
 
-For a live example I highly recommend you check out the demo and view-source. To see how to you can configure it readon.
+This is a UMD package so if you just include the script in your page it'll attach to the window.
+
+But if you prefer a module system this will work fine with commonjs or AMD modules just fine.
 
 ```js
 var ScrollListView = require('ScrollListView');
@@ -31,10 +33,6 @@ var scrollListView = new ScrollListView({
   renderCellFn: renderCellFn
 });
 ```
-
-This is a UMD package so if you just include the script in your page it'll attach to the window.
-
-But if you prefer a module system this will work fine with commonjs or AMD modules just fine.
 
 #### API
 
