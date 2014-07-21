@@ -1,5 +1,5 @@
 {
-  "name": "ScrollListView",
+  "name": "scrolllistview",
   "version": "0.1.0",
   "description": "Performant scrolling over huge lists of data.",
   "main": "./src/main.js",
