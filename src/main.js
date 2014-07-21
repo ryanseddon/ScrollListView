@@ -22,6 +22,10 @@ function ScrollListView(opts) {
     this.isTopCellOutOfView = false;
     this.renderFn = opts.renderFn;
     this.renderCellFn = opts.renderCellFn;
+    this.cellReorderThreshold = () => {
+        var ratio = (this.CELLHEIGHT*this.cellsWithinViewportCount)/4;
+        return ratio < this.CELLHEIGHT ? 0 : ratio;
+    };
 
     this.render();
     this.container.addEventListener('scroll', () => this.onScroll(), false);
@@ -49,7 +53,7 @@ ScrollListView.prototype = {
             cell.style.cssText = css;
         });
 
-        this.element.style.minHeight = this.cellsWithinViewportCount * this.CELLHEIGHT + 'px';
+        this.element.style.minHeight = this.data.length * this.CELLHEIGHT + 'px';
     },
 
     renderCell(cell, index) {
@@ -60,15 +64,17 @@ ScrollListView.prototype = {
     },
 
     isTopElementOutOfViewport(el) {
-        var elemPostion = el.getBoundingClientRect();
+        var elemPostion = el.getBoundingClientRect(),
+            bottomOffset = elemPostion.bottom - (this.container.offsetTop - body.scrollTop);
 
-        return !!elemPostion && elemPostion.bottom <= -(this.CELLHEIGHT*2);
+        return !!elemPostion && bottomOffset <= -(this.cellReorderThreshold());
     },
 
     isBottomElementOutOfViewport(el) {
-        var elemPostion = el.getBoundingClientRect();
+        var elemPostion = el.getBoundingClientRect(),
+            topOffset = elemPostion.top - (this.container.offsetTop - body.scrollTop);
 
-        return !!elemPostion && elemPostion.top > this.containerHeight + (this.CELLHEIGHT*2);
+        return !!elemPostion && topOffset > this.containerHeight + this.cellReorderThreshold();
     },
 
     onScroll() {
@@ -79,9 +85,9 @@ ScrollListView.prototype = {
 
     onResize(e) {
         clearTimeout(resizeTimer);
-        resizeTimer = setTimeout(function() {
+        resizeTimer = setTimeout(() => {
             this.containerHeight = this.container.offsetHeight;
-        }.bind(this), 250);
+        }, 250);
     },
 
     getCurrentCell(count) {
