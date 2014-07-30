@@ -3,6 +3,18 @@
 	box-sizing: border-box;
 }
 
+html {
+  height: 100%;
+  width: 100%;
+  overflow: hidden;
+}
+
+body {
+  height: 100%;
+  width: 100%;
+  overflow: auto;
+}
+
 body > h1 {
     width: 60%;
     margin: 10px auto;
