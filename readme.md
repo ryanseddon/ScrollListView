@@ -1,7 +1,7 @@
 # ScrollListView
 
-ScrollListView.js is a library that allows you to scroll over large data sets without get a performance impact.
-It does this though a clever algorithm of re-using a fixed number of cells and as you scroll repaints them beneath the last item.
+ScrollListView.js is a library that allows you to scroll over large data sets without a performance impact.
+It does this through a clever algorithm of re-using a fixed number of cells and as you scroll repaints them beneath the last item.
 Think iOS UITableView for the web.
 
 ## Context

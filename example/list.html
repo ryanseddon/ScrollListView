@@ -59,17 +59,17 @@
                     loadTweets(function(data) {
                         listContainer.innerHTML += tmpl('tweets_tpl', data);
                     });
-                }, false);
 
-                window.addEventListener('scroll', function() {
-                    clearTimeout(scrollTimer);
-                    scrollTimer = setTimeout(function() {
-                        if(body.scrollTop + window.screen.height >= body.scrollHeight - (150*4)) {
-                            loadTweets(function(data) {
-                                listContainer.innerHTML += tmpl('tweets_tpl', data);
-                                });
-                            }
-                    }, 250)
+                    listContainer.parentNode.addEventListener('scroll', function() {
+                        clearTimeout(scrollTimer);
+                        scrollTimer = setTimeout(function() {
+                            if(body.scrollTop + window.screen.height >= body.scrollHeight - (150*4)) {
+                                loadTweets(function(data) {
+                                    listContainer.innerHTML += tmpl('tweets_tpl', data);
+                                    });
+                                }
+                        }, 250)
+                    }, false);
                 }, false);
             }());
         </script>
